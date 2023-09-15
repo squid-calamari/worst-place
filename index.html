@@ -41,7 +41,7 @@
                 font-family: Arial, Helvetica, sans-serif;
                 text-shadow: 2px 2px #000000;
                 font-weight: normal;
-                font-size: 1rem;
+                font-size: 2rem;
             }
 
             .legend h1 {
@@ -140,15 +140,25 @@
                             onEachFeature: function(feature, layer) {
                                 var p = feature.properties;
                                 var population2022 = parseInt(p.population["2022"]);
-                                var tooltipText = `${p.SA22022__1}: `;
-                                
+                                var tooltipText = `<span style='font-size: 32pt;'>${p.SA22022__1}: `;
+
                                 if (population2022 === 2260) {
-                                    tooltipText += "Insufficient Data";
+                                    tooltipText += "<span style='font-size: 32pt;'>Insufficient Data</span>";
                                 } else {
-                                    tooltipText += `Ranked ${population2022} rank`;
+                                    tooltipText += `<span style='font-size: 32pt;'>Ranked ${population2022} rank</span>`;
                                 }
-                                
+
                                 layer.bindTooltip(tooltipText);
+
+                                // Add hover event listener to change the weight
+                                layer.on({
+                                    mouseover: function(e) {
+                                        e.target.setStyle({ weight: 5 });
+                                    },
+                                    mouseout: function(e) {
+                                        e.target.setStyle({ weight: 0.4 }); // Restore the original weight
+                                    }
+                                });
                             },
                             style: function(feature) {
                                 var population2022 = feature.properties.population["2022"];
@@ -166,7 +176,7 @@
                                     fillColor: fillColor,
                                     fillOpacity: 0.6,
                                     color: 'black',
-                                    weight: 0.25
+                                    weight: 0.4
                                 };
                             }
                         }).addTo(map);
@@ -185,7 +195,7 @@
                             var div = L.DomUtil.create("div", "info legend");
                             div.style.width = "200px"; // Set the width of the legend container
                             div.style.padding = "10px"; // Add padding for spacing
-                            div.innerHTML += "<h1 style='font-size: 16px;'>Ranking</h1>"; // Increase font size for the header
+                            div.innerHTML += "<h1 style='font-size: 32px;'>Ranking</h1>"; // Increase font size for the header
 
                             // Define legend intervals
                             var intervals = [1, 250, 500, 750, 1000, 1250, 1500, 1750, 2000];
@@ -196,13 +206,13 @@
                                 var end = intervals[i + 1];
                                 
                                 if (start === 1 && end === 250) {
-                                    div.innerHTML += `<i style="background: ${cmap((start + end) / 2)}"></i> <span style='font-size: 14px;'>${start}-${end} (Worst)</span><br>`;
+                                    div.innerHTML += `<i style="background: ${cmap((start + end) / 2)}"></i> <span style='font-size: 28px;'>${start}-${end} (Worst)</span><br>`;
                                 } else if (start === 2000 && !end) {
-                                    div.innerHTML += `<i style="background: ${cmap(start)}"></i> <span style='font-size: 14px;'>${start}+ (Best)</span><br>`;
+                                    div.innerHTML += `<i style="background: ${cmap(start)}"></i> <span style='font-size: 28px;'>${start}+ (Best)</span><br>`;
                                 } else if (end) {
-                                    div.innerHTML += `<i style="background: ${cmap((start + end) / 2)}"></i> <span style='font-size: 14px;'>${start}-${end}</span><br>`;
+                                    div.innerHTML += `<i style="background: ${cmap((start + end) / 2)}"></i> <span style='font-size: 28px;'>${start}-${end}</span><br>`;
                                 } else {
-                                    div.innerHTML += `<i style="background: ${cmap(start)}"></i> <span style='font-size: 14px;'>${start}+</span><br>`;
+                                    div.innerHTML += `<i style="background: ${cmap(start)}"></i> <span style='font-size: 28px;'>${start}+</span><br>`;
                                 }
                             }
 
